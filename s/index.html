@@ -47,19 +47,22 @@ li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px sol
 (function () {
   var ja = (navigator.language || '').toLowerCase().indexOf('ja') === 0;
   var T = ja ? {
-    title: 'セトリ', open: '爆音メトロノームで開く', store: 'App Store で入手',
+    title: 'セトリ', open: '爆音メトロノームで開く', store: 'App Store で入手', play: 'Google Play で入手',
     hint: 'アプリが入っていれば、上のボタンで取り込めます。', error: 'このリンクは読み込めませんでした。',
     songs: function (n) { return n + '曲'; }, countIn: function (n) { return 'カウント ' + n; },
     sub: { quarter: '4分', eighth: '8分', sixteenth: '16分', triplet: '3連', shuffle: 'シャッフル' }
   } : {
-    title: 'Setlist', open: 'Open in Bakuon Metronome', store: 'Get it on the App Store',
+    title: 'Setlist', open: 'Open in Bakuon Metronome', store: 'Get it on the App Store', play: 'Get it on Google Play',
     hint: 'If the app is installed, the button above imports this setlist.', error: 'This link could not be read.',
     songs: function (n) { return n + (n === 1 ? ' song' : ' songs'); }, countIn: function (n) { return 'Count-in ' + n; },
     sub: { quarter: 'Quarter', eighth: '8th', sixteenth: '16th', triplet: 'Triplet', shuffle: 'Shuffle' }
   };
   if (!ja) document.documentElement.lang = 'en';
   var $ = function (id) { return document.getElementById(id); };
-  $('open').textContent = T.open; $('store').textContent = T.store; $('error').textContent = T.error;
+  // Android の人には Google Play を案内する（アプリを開くリンクは iPhone と同じ）。
+  var android = /Android/i.test(navigator.userAgent);
+  if (android) $('store').href = 'https://play.google.com/store/apps/details?id=com.ss0314.bakuonsyndrome';
+  $('open').textContent = T.open; $('store').textContent = android ? T.play : T.store; $('error').textContent = T.error;
   $('hint').firstChild.textContent = T.hint;
 
   var frag = location.hash.slice(1);
